@@ -1,0 +1,6 @@
+*.dict
+*.pyc
+*.DS_Store
+*.h5
+*.hdf5
+*.idea
