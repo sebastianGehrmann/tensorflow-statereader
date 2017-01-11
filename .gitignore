@@ -4,3 +4,6 @@
 *.h5
 *.hdf5
 *.idea
+.ipynb_checkpoints
+data/childbook
+checkpoint
