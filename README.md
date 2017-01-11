@@ -28,3 +28,7 @@ A standard model using the Penn Treebank can be trained by simply running ``pyth
   --vocab_size      Size of Vocabulary [6500]   
 ```
 The standard parameters lead to a very small model that is quickly trained. For parameter configuration for a large model, have a look at http://arxiv.org/abs/1409.2329 by Zaremba et al. 
+
+## Credits
+
+LSTMVis and all its parts are a collaborative project of Hendrik Strobelt, Sebastian Gehrmann, Hanspeter Pfister, and Alexander M. Rush at Harvard SEAS.
