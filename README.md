@@ -22,7 +22,7 @@ A standard model using the Penn Treebank can be trained by simply running ``pyth
   --hidden_size     Number of cell states. [200]
   --max_epoch       How many epochs with max learning rate before decay begins. [4]
   --max_max_epoch   How many epochs to train for. [10]
-  --keep_prob       Dropout probability. [1.0]
+  --dropout         Dropout probability. [1.0]
   --lr_decay        Decay multiplier for the learning rate. [0.5]
   --batch_size      Batchsize. [20]
   --vocab_size      Size of Vocabulary [6500]   
