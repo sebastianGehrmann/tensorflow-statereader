@@ -27,7 +27,7 @@ A standard model using the Penn Treebank can be trained by simply running ``pyth
   --batch_size      Batchsize. [20]
   --vocab_size      Size of Vocabulary [6500]   
 ```
-The standard parameters lead to a very small model that is quickly trained. For parameter configuration for a large model, have a look at http://arxiv.org/abs/1409.2329 by Zaremba et al. 
+The standard parameters lead to a very small model that is quickly trained. For parameter configuration for a large models, have a look at http://arxiv.org/abs/1409.2329 by Zaremba et al. 
 
 ## How to Extract States from Your Model? 
 
