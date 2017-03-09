@@ -43,15 +43,16 @@ Before:
     outputs, state = tf.nn.rnn(cell, inputs, initial_state=self._initial_state)
    
 After: 
-
-    outputs = []
+    
+    self._states = []
     state = self._initial_state
     with tf.variable_scope("RNN"):
-      for time_step in range(num_steps):
-        if time_step > 0: tf.get_variable_scope().reuse_variables()
-        (cell_output, state) = cell(inputs[:, time_step, :], state)
-        outputs.append(cell_output)
-        self._states = []
+        for time_step in range(num_steps):
+            if time_step > 0: tf.get_variable_scope().reuse_variables()
+            (cell_output, state) = cell(inputs[:, time_step, :], state)
+            outputs.append(cell_output)
+            self._states.append(state)
+    
 
 With the code above, you have a variable that stores an an array of length $num_steps$ that contains LSTMStateTuple, a tensorflow-internal data type that stores *c*, the cell states, and *h*, the hidden states. The states are of dimension *batch_size * state_size*. 
 
