@@ -19,6 +19,7 @@ import h5py
 
 import numpy as np
 import tensorflow as tf
+from tensorflow.contrib import rnn, seq2seq, framework, legacy_seq2seq
 
 import reader
 
@@ -77,12 +78,12 @@ class PTBModel(object):
         self._size = FLAGS.hidden_size
         vocab_size = FLAGS.vocab_size
 
-        lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(
+        lstm_cell = rnn.BasicLSTMCell(
             self._size, forget_bias=0.0, state_is_tuple=True)
         if is_training and FLAGS.dropout < 1:
-            lstm_cell = tf.nn.rnn_cell.DropoutWrapper(
+            lstm_cell = rnn.DropoutWrapper(
                 lstm_cell, output_keep_prob=FLAGS.dropout)
-        cell = tf.nn.rnn_cell.MultiRNNCell(
+        cell = rnn.MultiRNNCell(
             [lstm_cell] * FLAGS.num_layers, state_is_tuple=True)
 
         self._initial_state = cell.zero_state(batch_size, data_type())
@@ -105,7 +106,7 @@ class PTBModel(object):
                 outputs.append(cell_output)
                 self._states.append(state)
 
-        output = tf.reshape(tf.concat_v2(outputs, 1), [-1, self._size])
+        output = tf.reshape(tf.concat(outputs, 1), [-1, self._size])
         softmax_w = tf.get_variable(
             "softmax_w", [self._size, vocab_size], dtype=data_type())
         # print(softmax_w, "SOFTMAX W")
@@ -114,7 +115,7 @@ class PTBModel(object):
         logits = tf.matmul(output, softmax_w) + softmax_b  # 400 x 10k
         # print(logits, "LOGITS")
         # print(input_.targets, "TARGET")
-        loss = tf.nn.seq2seq.sequence_loss_by_example(
+        loss = legacy_seq2seq.sequence_loss_by_example(
             [logits],
             [tf.reshape(input_.targets, [-1])],
             [tf.ones([batch_size * num_steps], dtype=data_type())])
@@ -131,7 +132,7 @@ class PTBModel(object):
         optimizer = tf.train.GradientDescentOptimizer(self._lr)
         self._train_op = optimizer.apply_gradients(
             zip(grads, tvars),
-            global_step=tf.contrib.framework.get_or_create_global_step())
+            global_step=framework.get_or_create_global_step())
 
         self._new_lr = tf.placeholder(
             tf.float32, shape=[], name="new_learning_rate")
@@ -214,6 +215,7 @@ def run_epoch(session, model, eval_op=None, verbose=False):
 
     return np.exp(costs / iters), all_states
 
+
 def main(_):
     if not FLAGS.data_path:
         raise ValueError("Must set --data_path to PTB data directory")
@@ -244,14 +246,13 @@ def main(_):
                 mvalid = PTBModel(is_training=False, input_=valid_input)
             tf.summary.scalar("Validation Loss", mvalid.cost)
 
-
         sv = tf.train.Supervisor(logdir=FLAGS.save_path)
         with sv.managed_session() as session:
             if FLAGS.load_path:
                 sv.saver.restore(session, tf.train.latest_checkpoint(FLAGS.load_path))
             else:
                 for i in range(FLAGS.max_max_epoch):
-                    lr_decay = FLAGS.lr_decay ** max(i + 1 - FLAGS.max_epoch, 0.0)
+                    lr_decay = FLAGS.lr_decay ** float(max(i + 1 - FLAGS.max_epoch, 0))
                     m.assign_lr(session, FLAGS.learning_rate * lr_decay)
 
                     print("Epoch: %d Learning rate: %.3f" % (i + 1, session.run(m.lr)))
