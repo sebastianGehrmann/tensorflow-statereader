@@ -1,6 +1,6 @@
 # tensorflow-statereader
 
-This Repository provides a simple LSTM implementation including a state extractor. A model is first trained and states then extracted and stored in a hdf5 file. This makes it possible to train custom language models for [LSTMVis](https://github.com/HendrikStrobelt/LSTMVis). 
+This Repository provides a simple LSTM implementation including a state extractor for tensorflow 1.1.0. A model is first trained and states then extracted and stored in a hdf5 file. This makes it possible to train custom language models for [LSTMVis](https://github.com/HendrikStrobelt/LSTMVis). 
 
 This code is heavily based on tutorial implementation in the official documentation which can be found [here](https://github.com/tensorflow/models/tree/master/tutorials/rnn/ptb).
 
