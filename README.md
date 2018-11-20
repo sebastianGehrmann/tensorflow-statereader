@@ -54,7 +54,7 @@ After:
             self._states.append(state)
     
 
-With the code above, you have a variable that stores an an array of length $num_steps$ that contains LSTMStateTuple, a tensorflow-internal data type that stores *c*, the cell states, and *h*, the hidden states. The states are of dimension *batch_size * state_size*. 
+With the code above, you have a variable that stores an array of length $num_steps$ that contains LSTMStateTuple, a tensorflow-internal data type that stores *c*, the cell states, and *h*, the hidden states. The states are of dimension *batch_size * state_size*. 
 
 You get this array by executing your existing `session.run` code, with the following addition: 
 
